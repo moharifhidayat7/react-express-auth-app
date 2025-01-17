@@ -47,17 +47,30 @@ export function VerificationForm() {
 
 	useEffect(() => {
 		const verifyEmail = async () => {
-			try {
-				await fetch(
-					`/api/auth/verify-email?token=${searchParams.get("token")}`,
-				);
-			} catch (error) {
-				setStatus("error");
-			}
+			authClient.verifyEmail(
+				{
+					query: {
+						token: searchParams.get("token") || "",
+					},
+				},
+				{
+					onRequest: () => {
+						setStatus("sending");
+					},
+					onSuccess: () => {
+						setStatus("verified");
+					},
+					onError: (ctx) => {
+						setError("root.serverError", ctx.error);
+					},
+				},
+			);
 		};
 
 		return () => {
-			verifyEmail();
+			if (searchParams.get("token")) {
+				verifyEmail();
+			}
 		};
 	}, []);
 

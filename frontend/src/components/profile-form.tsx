@@ -1,85 +1,91 @@
 "use client";
 
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
-import {
-	Form,
-	FormControl,
-	FormDescription,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
+import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { authClient } from "@/lib/auth-client";
 
 type ProfileFormValues = {
-	display_name: string;
+	name: string;
 	email: string;
 };
 
-// This can come from your database or API.
-const defaultValues: Partial<ProfileFormValues> = {
-	display_name: "I own a computer.",
-	email: "arif@example.com",
-};
-
 export function ProfileForm() {
-	const form = useForm<ProfileFormValues>({
-		defaultValues,
-		mode: "onChange",
-	});
-
-	function onSubmit(data: ProfileFormValues) {
-		toast({
-			title: "You submitted the following values:",
-			description: (
-				<pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-					<code className="text-white">{JSON.stringify(data, null, 2)}</code>
-				</pre>
-			),
-		});
+	const { toast } = useToast();
+	const { data: session } = authClient.useSession();
+	const { register, setValue, handleSubmit } = useForm<ProfileFormValues>();
+	async function onSubmit(data: ProfileFormValues) {
+		await authClient.updateUser(
+			{
+				image: "https://example.com/image.jpg",
+				name: data.name,
+			},
+			{
+				onSuccess: () => {
+					toast({
+						variant: "success",
+						title: "Update Profile Success",
+						description: "User profile has been updated.",
+					});
+				},
+				onError: (ctx) => {
+					toast({
+						variant: "destructive",
+						title: "Update Profile Failed",
+						description: ctx.error.message,
+					});
+				},
+			},
+		);
 	}
 
+	useEffect(() => {
+		const getUserProfile = async () => {
+			await fetch(`${import.meta.env.VITE_API_URL}/users/${session?.user.id}`, {
+				method: "GET",
+				credentials: "include",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			}).then(async (res) => {
+				const user = await res.json();
+				setValue("name", user.name);
+				setValue("email", user.email);
+			});
+		};
+
+		getUserProfile();
+	}, []);
+
 	return (
-		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-				<FormField
-					control={form.control}
-					name="display_name"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Name</FormLabel>
-							<FormControl>
-								<Input placeholder="Type your name" {...field} />
-							</FormControl>
-							<FormDescription>
-								This is your public display name. It can be your real name or a
-								pseudonym.
-							</FormDescription>
-							<FormMessage />
-						</FormItem>
-					)}
+		<form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+			<div className="grid gap-2">
+				<Label htmlFor="name">Name</Label>
+				<Input
+					id="name"
+					type="text"
+					placeholder="Type your name"
+					{...register("name", {
+						required: true,
+					})}
 				/>
-				<FormField
-					control={form.control}
-					name="email"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Email</FormLabel>
-							<Input
-								type="email"
-								placeholder="m@example.com"
-								disabled
-								{...field}
-							/>
-							<FormMessage />
-						</FormItem>
-					)}
+			</div>
+			<div className="grid gap-2">
+				<Label htmlFor="email">Email</Label>
+				<Input
+					id="email"
+					type="email"
+					placeholder="m@example.com"
+					disabled
+					{...register("email", {
+						required: true,
+					})}
 				/>
-				<Button type="submit">Update profile</Button>
-			</form>
-		</Form>
+			</div>
+			<Button type="submit">Update profile</Button>
+		</form>
 	);
 }

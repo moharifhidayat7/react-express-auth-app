@@ -25,10 +25,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 	const [auth, setAuth] = useState<Auth | null>(null);
 
 	const setAuthFromToken = (data: any): void => {
+		localStorage.setItem("token", data.token);
 		setAuth({ user: data.user, token: data.token });
 	};
 
 	const clearAuth = () => {
+		localStorage.removeItem("token");
 		setAuth(null);
 	};
 

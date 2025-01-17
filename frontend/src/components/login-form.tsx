@@ -26,6 +26,7 @@ type LoginFormInputs = {
 };
 
 export function LoginForm() {
+	const { setAuthFromToken } = useAuth();
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
 	const {
@@ -35,7 +36,6 @@ export function LoginForm() {
 		formState: { errors },
 		setError,
 	} = useForm<LoginFormInputs>();
-	const { setAuthFromToken } = useAuth();
 
 	const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
 		await authClient.signIn.email(data, {

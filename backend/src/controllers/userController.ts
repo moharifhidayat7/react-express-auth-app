@@ -1,27 +1,47 @@
 import { Request, Response } from "express";
 import { db } from "../../drizzle/db.ts";
 import * as schema from "../../drizzle/schema.ts";
-import { eq } from "drizzle-orm";
+import { eq, gt, lte } from "drizzle-orm";
 
 export const getUsers = async (req: Request, res: Response) => {
 	try {
-		const users = await db.select().from(schema.user);
-		res.set("Content-Type", "application/json").status(200);
-		const result: any = users.map((user) => {
-			const formatted = user.createdAt
+		const result = await db
+			.select()
+			.from(schema.user)
+			.leftJoin(schema.session, lte(schema.user.id, schema.session.userId));
+		const groupedData: any = [];
+
+		result.forEach((curr) => {
+			let userGroup = groupedData.find(
+				(group: any) => group.id === curr.user.id,
+			);
+
+			if (!userGroup) {
+				userGroup = {
+					...curr.user,
+					sessions: [],
+				};
+				groupedData.push(userGroup);
+			}
+
+			if (curr.session) {
+				userGroup.sessions.push(curr.session);
+			}
+		});
+		const jsonRes = groupedData.map((user: any) => {
+			const formattedDate = user.createdAt
 				.toISOString()
 				.replace("T", " ")
-				.replace("Z", "");
+				.split(".")[0];
 			return {
 				id: user.id,
 				name: user.name,
 				email: user.email,
-				registration_date: formatted,
-				successful_logins: 50,
-				last_login: new Date(),
+				registration_date: formattedDate,
+				successful_logins: user.sessions.length,
 			};
 		});
-		res.json(result);
+		res.json(jsonRes);
 	} catch (error) {
 		console.log(error);
 		res.status(500).json({ message: "some error" });
@@ -31,10 +51,14 @@ export const getUsers = async (req: Request, res: Response) => {
 export const getStats = async (req: Request, res: Response) => {
 	try {
 		const users = await db.select().from(schema.user);
+		const sessions = await db
+			.select()
+			.from(schema.session)
+			.where(gt(schema.session.expiresAt, new Date()));
 
 		const data = {
 			registeredUsers: users.length,
-			activeSessions: 0,
+			activeSessions: sessions.length,
 			averageActiveUser: 0,
 		};
 		res.set("Content-Type", "application/json").status(200);
@@ -51,7 +75,7 @@ export const getOneUser = async (req: Request, res: Response) => {
 			.from(schema.user)
 			.where(eq(schema.user.id, req.params.id));
 		res.set("Content-Type", "application/json").status(200);
-		res.json(user);
+		res.json(user[0]);
 	} catch (error) {
 		res.status(500).json({ message: "some error" });
 	}
@@ -59,10 +83,10 @@ export const getOneUser = async (req: Request, res: Response) => {
 
 export const updateUser = async (req: Request, res: Response) => {
 	try {
-		const { displayName } = req.body;
+		const { name } = req.body;
 		const user = await db
 			.update(schema.user)
-			.set({ displayName })
+			.set({ name })
 			.where(eq(schema.user.id, req.body.id))
 			.returning();
 		res.set("Content-Type", "application/json").status(200);

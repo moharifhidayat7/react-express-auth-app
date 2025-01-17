@@ -18,14 +18,14 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "@/components/ui/sidebar";
-import { Link } from "react-router";
+import { Link, redirect } from "react-router";
 import ROUTES from "@/routes";
-import { useAuth } from "@/context/AuthContext";
 import { authClient } from "@/lib/auth-client";
+import { useAuth } from "@/context/AuthContext";
 
 export function NavUser() {
-	const { clearAuth } = useAuth();
 	const { isMobile } = useSidebar();
+	const { clearAuth } = useAuth();
 
 	const { data: session } = authClient.useSession();
 	const user: any = session?.user;
@@ -35,8 +35,15 @@ export function NavUser() {
 		.map((n: any) => n[0])
 		.join("");
 
-	const logout = () => {
-		clearAuth();
+	const logout = async () => {
+		await authClient.signOut({
+			fetchOptions: {
+				onSuccess: () => {
+					clearAuth();
+					redirect(ROUTES.login);
+				},
+			},
+		});
 	};
 
 	return (

@@ -1,8 +1,7 @@
-import "dotenv/config";
 import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
-	service: process.env.MAILTRAP_HOST,
+	host: process.env.MAILTRAP_HOST,
 	port: process.env.MAILTRAP_PORT,
 	auth: {
 		user: process.env.MAILTRAP_USER,
@@ -12,10 +11,12 @@ const transporter = nodemailer.createTransport({
 
 export const sendMail = async (mailOptions: any) => {
 	try {
-		// Send Mail Logic
+		console.log(mailOptions);
 		await transporter.sendMail(mailOptions);
 		return true;
 	} catch (error) {
+		console.error(error);
+		console.log("test");
 		throw new Error("Error sending email");
 	}
 };
