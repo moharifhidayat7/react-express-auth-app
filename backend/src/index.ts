@@ -3,9 +3,11 @@ import express from "express";
 import { toNodeHandler } from "better-auth/node";
 import { auth } from "./lib/auth.ts";
 import router from "./router.ts";
+import cors from "cors";
 
 const app = express();
 
+app.use(cors());
 app.all("/api/auth/*", toNodeHandler(auth));
 app.use("/api/", router);
 app.use(express.json());

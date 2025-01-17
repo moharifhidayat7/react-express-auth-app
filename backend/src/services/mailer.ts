@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer";
+import * as nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
 	host: process.env.MAILTRAP_HOST,
@@ -7,7 +7,7 @@ const transporter = nodemailer.createTransport({
 		user: process.env.MAILTRAP_USER,
 		pass: process.env.MAILTRAP_PASS,
 	},
-});
+} as nodemailer.SendMailOptions);
 
 export const sendMail = async (mailOptions: any) => {
 	try {
