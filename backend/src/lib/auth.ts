@@ -2,6 +2,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "../../drizzle/db.ts";
 import * as schema from "../../drizzle/schema.ts";
+import { sendMail } from "./mailer.ts";
 
 export const auth = betterAuth({
 	database: drizzleAdapter(db, {
@@ -15,7 +16,7 @@ export const auth = betterAuth({
 	emailVerification: {
 		sendOnSignUp: true,
 		sendVerificationEmail: async ({ user, url, token }, request) => {
-			console.info({
+			sendMail({
 				to: user.email,
 				subject: "Verify your email address",
 				text: `Click the link to verify your email: ${url}`,

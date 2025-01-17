@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
-import { useAuth } from "@/context/AuthContext";
 import {
 	Breadcrumb,
 	BreadcrumbLink,
@@ -15,7 +14,6 @@ import ROUTES from "@/routes";
 
 export default function UsersPage() {
 	const [data, setData] = useState([]);
-	const { auth } = useAuth();
 
 	useEffect(() => {
 		const getUsers = async () => {

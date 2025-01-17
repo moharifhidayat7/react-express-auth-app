@@ -1,12 +1,6 @@
 import { useState } from "react";
 
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "./ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,6 +25,7 @@ export function ForgotPasswordForm() {
 
 	const onSubmit: SubmitHandler<ForgotPasswordFormInputs> = async (data) => {
 		console.log(data);
+		console.log(setSent(true));
 	};
 
 	return (

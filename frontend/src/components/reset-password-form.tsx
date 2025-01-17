@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,7 +9,6 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Spinner } from "@/components/ui/spinner";
 
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useAuth } from "@/context/AuthContext";
 import ROUTES from "@/routes";
 
 type ResetPasswordFormInputs = {
@@ -35,12 +34,13 @@ export function ResetPasswordForm() {
 			body: JSON.stringify(data),
 		})
 			.then(async (res) => {
-				const json = await res.json();
-				const mock = {
-					...json,
-					token:
-						"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiTW9oYW1hZCBBcmlmIEhpZGF5YXQiLCJlbWFpbCI6Im1vaGFyaWZoaWRheWF0N0BnbWFpbC5jb20ifQ._EBE-OW-xAURJCAmlaewjpotD6V4kF15pDtcoR8cl5k",
-				};
+				// const mock = {
+				// 	...json,
+				// 	token:
+				// 		"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiTW9oYW1hZCBBcmlmIEhpZGF5YXQiLCJlbWFpbCI6Im1vaGFyaWZoaWRheWF0N0BnbWFpbC5jb20ifQ._EBE-OW-xAURJCAmlaewjpotD6V4kF15pDtcoR8cl5k",
+				// };
+				setSuccess(true);
+				return await res.json();
 			})
 			.finally(() => setLoading(false));
 	};

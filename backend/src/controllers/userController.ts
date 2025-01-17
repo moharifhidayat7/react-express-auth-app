@@ -7,7 +7,21 @@ export const getUsers = async (req: Request, res: Response) => {
 	try {
 		const users = await db.select().from(schema.user);
 		res.set("Content-Type", "application/json").status(200);
-		res.json(users);
+		const result: any = users.map((user) => {
+			const formatted = user.createdAt
+				.toISOString()
+				.replace("T", " ")
+				.replace("Z", "");
+			return {
+				id: user.id,
+				name: user.name,
+				email: user.email,
+				registration_date: formatted,
+				successful_logins: 50,
+				last_login: new Date(),
+			};
+		});
+		res.json(result);
 	} catch (error) {
 		console.log(error);
 		res.status(500).json({ message: "some error" });

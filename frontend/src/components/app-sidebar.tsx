@@ -14,7 +14,6 @@ import {
 	SidebarFooter,
 } from "@/components/ui/sidebar";
 import { NavUser } from "@/components/nav-user";
-import { useAuth } from "@/context/AuthContext";
 
 const items = [
 	{
@@ -30,7 +29,6 @@ const items = [
 ];
 
 export function AppSidebar() {
-	const { auth } = useAuth();
 	const location = useLocation();
 
 	useEffect(() => {
@@ -62,7 +60,7 @@ export function AppSidebar() {
 				</SidebarGroup>
 			</SidebarContent>
 			<SidebarFooter>
-				<NavUser user={auth?.user} />
+				<NavUser />
 			</SidebarFooter>
 		</Sidebar>
 	);

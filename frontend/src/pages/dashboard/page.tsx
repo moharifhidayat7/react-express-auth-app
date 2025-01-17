@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "@/context/AuthContext";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -16,7 +15,6 @@ export default function DashboardPage() {
 		activeSessions: 0,
 		averageActiveUser: 0,
 	});
-	const { auth } = useAuth();
 
 	useEffect(() => {
 		const getStats = async () => {
@@ -59,7 +57,7 @@ export default function DashboardPage() {
 					<Card>
 						<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 							<CardTitle className="text-sm font-medium">
-								Register Users
+								Registered Users
 							</CardTitle>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"

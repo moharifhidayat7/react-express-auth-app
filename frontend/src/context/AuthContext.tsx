@@ -1,10 +1,9 @@
 import React, { createContext, useState, useContext, ReactNode } from "react";
-import { decodeJwt } from "jose";
 
 export type User = {
 	name: string;
 	email: string;
-	avatar?: string;
+	image?: string;
 };
 
 type Auth = {

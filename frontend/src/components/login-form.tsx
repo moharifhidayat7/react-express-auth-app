@@ -35,7 +35,7 @@ export function LoginForm() {
 		formState: { errors },
 		setError,
 	} = useForm<LoginFormInputs>();
-	const { auth, setAuthFromToken } = useAuth();
+	const { setAuthFromToken } = useAuth();
 
 	const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
 		await authClient.signIn.email(data, {

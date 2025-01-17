@@ -1,14 +1,19 @@
-export const emailVerificationTemplate = `
-    <span>hello</span>
-  `;
+import "dotenv/config";
+import nodemailer from "nodemailer";
 
-export const resetPasswordTemplate = `
-  <span>tesda</span>
-`;
+const transporter = nodemailer.createTransport({
+	service: process.env.MAILTRAP_HOST,
+	port: process.env.MAILTRAP_PORT,
+	auth: {
+		user: process.env.MAILTRAP_USER,
+		pass: process.env.MAILTRAP_PASS,
+	},
+});
 
-export const sendMail = async (to: string, template: string) => {
+export const sendMail = async (mailOptions: any) => {
 	try {
 		// Send Mail Logic
+		await transporter.sendMail(mailOptions);
 		return true;
 	} catch (error) {
 		throw new Error("Error sending email");
