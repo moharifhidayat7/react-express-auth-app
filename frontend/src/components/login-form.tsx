@@ -137,7 +137,12 @@ export function LoginForm() {
 								</svg>
 								<span className="sr-only">Sign In with Google</span>
 							</Button>
-							<Button type="button" variant="outline" className="w-full">
+							<Button
+								type="button"
+								variant="outline"
+								className="w-full"
+								onClick={() => socialLogin("facebook")}
+							>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									width="24"
