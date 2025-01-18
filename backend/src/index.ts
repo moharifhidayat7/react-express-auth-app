@@ -7,7 +7,12 @@ import cors from "cors";
 
 const app = express();
 
-app.use(cors());
+app.use(
+	(cors as (options: cors.CorsOptions) => express.RequestHandler)({
+		origin: "https://ejfoe.arifhiday.com",
+		credentials: true,
+	}),
+);
 app.all("/api/auth/*", toNodeHandler(auth));
 app.use("/api/", router);
 app.use(express.json());
