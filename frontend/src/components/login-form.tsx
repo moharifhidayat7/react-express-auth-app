@@ -54,10 +54,17 @@ export function LoginForm() {
 	};
 
 	const socialLogin = async (provider: "google" | "facebook") => {
-		const data = await authClient.signIn.social({
-			provider,
-			callbackURL: import.meta.env.VITE_APP_URL + ROUTES.dashboard,
-		});
+		const data = await authClient.signIn.social(
+			{
+				provider,
+				callbackURL: import.meta.env.VITE_APP_URL + ROUTES.dashboard,
+			},
+			{
+				onSuccess: (ctx) => {
+					console.log("context", ctx);
+				},
+			},
+		);
 		console.log(data);
 	};
 

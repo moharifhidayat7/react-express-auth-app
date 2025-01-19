@@ -14,6 +14,7 @@ import {
 	SidebarFooter,
 } from "@/components/ui/sidebar";
 import { NavUser } from "@/components/nav-user";
+import { authClient } from "@/lib/auth-client";
 
 const items = [
 	{
@@ -31,10 +32,12 @@ const items = [
 export function AppSidebar() {
 	const searchParams = useSearchParams();
 	const location = useLocation();
+	const { data: session } = authClient.useSession();
 
 	useEffect(() => {
 		console.log(location);
 		console.log(searchParams);
+		console.log(session);
 	}, [location]);
 
 	return (
