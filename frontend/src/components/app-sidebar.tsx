@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { LayoutDashboard, Users } from "lucide-react";
 import ROUTES from "@/routes";
-import { NavLink, useLocation } from "react-router";
+import { NavLink, useLocation, useSearchParams } from "react-router";
 import {
 	Sidebar,
 	SidebarContent,
@@ -29,10 +29,12 @@ const items = [
 ];
 
 export function AppSidebar() {
+	const searchParams = useSearchParams();
 	const location = useLocation();
 
 	useEffect(() => {
 		console.log(location);
+		console.log(searchParams);
 	}, [location]);
 
 	return (
