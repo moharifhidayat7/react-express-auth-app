@@ -56,7 +56,7 @@ export function LoginForm() {
 	const socialLogin = async (provider: "google" | "facebook") => {
 		const data = await authClient.signIn.social({
 			provider,
-			callbackURL: import.meta.env.APP_URL + ROUTES.dashboard,
+			callbackURL: import.meta.env.VITE_APP_URL + ROUTES.dashboard,
 		});
 		console.log(data);
 	};
