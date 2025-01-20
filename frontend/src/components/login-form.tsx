@@ -57,6 +57,7 @@ export function LoginForm() {
 		await authClient.signIn.social({
 			provider,
 			callbackURL: `${import.meta.env.VITE_APP_URL}${ROUTES.dashboard}?authenticated=true`,
+			disableRedirect: true,
 		});
 	};
 
