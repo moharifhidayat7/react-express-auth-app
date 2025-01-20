@@ -19,7 +19,6 @@ import { authClient } from "@/lib/auth-client";
 import ROUTES from "@/routes";
 import { useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { o } from "node_modules/better-auth/dist/auth-CEAjdCRr";
 
 type LoginFormInputs = {
 	email: string;
