@@ -36,7 +36,9 @@ export function AppSidebar() {
 
 	useEffect(() => {
 		console.log(location);
-		console.log(searchParams);
+		for (const [key, value] of searchParams.entries()) {
+			console.log(key, value);
+		}
 		console.log(session);
 	}, [location]);
 
