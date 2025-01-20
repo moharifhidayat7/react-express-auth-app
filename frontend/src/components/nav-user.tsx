@@ -18,17 +18,19 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "@/components/ui/sidebar";
-import { Link, redirect } from "react-router";
+import { Link, useNavigate } from "react-router";
 import ROUTES from "@/routes";
 import { authClient } from "@/lib/auth-client";
 import { useAuth } from "@/context/AuthContext";
 
 export function NavUser() {
 	const { isMobile } = useSidebar();
-	const { clearAuth } = useAuth();
+	const navigate = useNavigate();
 
 	const { data: session } = authClient.useSession();
 	const user: any = session?.user;
+
+	const { clearAuth } = useAuth();
 
 	const userInitial = user?.name
 		.split(" ")
@@ -40,7 +42,7 @@ export function NavUser() {
 			fetchOptions: {
 				onSuccess: () => {
 					clearAuth();
-					redirect(ROUTES.login);
+					navigate(ROUTES.login);
 				},
 			},
 		});

@@ -13,7 +13,8 @@ type Auth = {
 
 type AuthContextType = {
 	auth: Auth | null;
-	setAuthFromToken: (data: any) => void;
+	getAuthToken: () => string | null;
+	setAuthToken: (data: any) => void;
 	clearAuth: () => void;
 };
 
@@ -24,7 +25,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
 	const [auth, setAuth] = useState<Auth | null>(null);
 
-	const setAuthFromToken = (data: any): void => {
+	const getAuthToken = (): string | null => {
+		let token = localStorage.getItem("token");
+		return token;
+	};
+
+	const setAuthToken = (data: any): void => {
 		localStorage.setItem("token", data.token);
 		setAuth({ user: data.user, token: data.token });
 	};
@@ -35,7 +41,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 	};
 
 	return (
-		<AuthContext.Provider value={{ auth, setAuthFromToken, clearAuth }}>
+		<AuthContext.Provider
+			value={{ auth, setAuthToken, getAuthToken, clearAuth }}
+		>
 			{children}
 		</AuthContext.Provider>
 	);

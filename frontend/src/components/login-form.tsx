@@ -16,9 +16,9 @@ import { Spinner } from "@/components/ui/spinner";
 
 import { useForm, SubmitHandler } from "react-hook-form";
 import { authClient } from "@/lib/auth-client";
-import { useAuth } from "@/context/AuthContext";
 import ROUTES from "@/routes";
 import { useEffect } from "react";
+import { useAuth } from "@/context/AuthContext";
 
 type LoginFormInputs = {
 	email: string;
@@ -26,7 +26,7 @@ type LoginFormInputs = {
 };
 
 export function LoginForm() {
-	const { setAuthFromToken } = useAuth();
+	const { setAuthToken } = useAuth();
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
 	const {
@@ -43,7 +43,7 @@ export function LoginForm() {
 				setLoading(true);
 			},
 			onSuccess: (ctx) => {
-				setAuthFromToken(ctx.data);
+				setAuthToken(ctx.data);
 				navigate(ROUTES.dashboard);
 			},
 			onError: (ctx) => {
@@ -54,18 +54,10 @@ export function LoginForm() {
 	};
 
 	const socialLogin = async (provider: "google" | "facebook") => {
-		const data = await authClient.signIn.social(
-			{
-				provider,
-				callbackURL: import.meta.env.VITE_APP_URL + ROUTES.dashboard,
-			},
-			{
-				onSuccess: (ctx) => {
-					console.log("context", ctx);
-				},
-			},
-		);
-		console.log(data);
+		await authClient.signIn.social({
+			provider,
+			callbackURL: `${import.meta.env.VITE_APP_URL}${ROUTES.dashboard}?authenticated=true`,
+		});
 	};
 
 	useEffect(() => {

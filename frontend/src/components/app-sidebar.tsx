@@ -1,7 +1,6 @@
-import { useEffect } from "react";
 import { LayoutDashboard, Users } from "lucide-react";
 import ROUTES from "@/routes";
-import { NavLink, useLocation, useSearchParams } from "react-router";
+import { NavLink, useLocation } from "react-router";
 import {
 	Sidebar,
 	SidebarContent,
@@ -14,7 +13,6 @@ import {
 	SidebarFooter,
 } from "@/components/ui/sidebar";
 import { NavUser } from "@/components/nav-user";
-import { authClient } from "@/lib/auth-client";
 
 const items = [
 	{
@@ -30,17 +28,7 @@ const items = [
 ];
 
 export function AppSidebar() {
-	const searchParams = useSearchParams();
 	const location = useLocation();
-	const { data: session } = authClient.useSession();
-
-	useEffect(() => {
-		console.log(location);
-		for (const [key, value] of searchParams.entries()) {
-			console.log(key, value);
-		}
-		console.log(session);
-	}, [location]);
 
 	return (
 		<Sidebar collapsible="icon">
