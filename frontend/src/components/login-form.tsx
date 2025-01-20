@@ -19,6 +19,7 @@ import { authClient } from "@/lib/auth-client";
 import ROUTES from "@/routes";
 import { useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { o } from "node_modules/better-auth/dist/auth-CEAjdCRr";
 
 type LoginFormInputs = {
 	email: string;
@@ -54,10 +55,11 @@ export function LoginForm() {
 	};
 
 	const socialLogin = async (provider: "google" | "facebook") => {
-		await authClient.signIn.social(
+		const data = await authClient.signIn.social(
 			{
 				provider,
 				callbackURL: `${import.meta.env.VITE_APP_URL}${ROUTES.dashboard}?authenticated=true`,
+				disableRedirect: true,
 			},
 			{
 				onSuccess: (ctx) => {
@@ -65,6 +67,7 @@ export function LoginForm() {
 				},
 			},
 		);
+		console.log("data", data);
 	};
 
 	useEffect(() => {
