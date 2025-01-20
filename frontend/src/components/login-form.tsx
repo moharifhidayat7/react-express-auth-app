@@ -54,11 +54,17 @@ export function LoginForm() {
 	};
 
 	const socialLogin = async (provider: "google" | "facebook") => {
-		await authClient.signIn.social({
-			provider,
-			callbackURL: `${import.meta.env.VITE_APP_URL}${ROUTES.dashboard}?authenticated=true`,
-			disableRedirect: true,
-		});
+		await authClient.signIn.social(
+			{
+				provider,
+				callbackURL: `${import.meta.env.VITE_APP_URL}${ROUTES.dashboard}?authenticated=true`,
+			},
+			{
+				onSuccess: (ctx) => {
+					console.log("ctx", ctx);
+				},
+			},
+		);
 	};
 
 	useEffect(() => {
