@@ -62,16 +62,15 @@ export function VerificationForm() {
 					},
 					onError: (ctx) => {
 						setError("root.serverError", ctx.error);
+						setStatus("error");
 					},
 				},
 			);
 		};
 
-		return () => {
-			if (searchParams.get("token")) {
-				verifyEmail();
-			}
-		};
+		if (searchParams.get("token")) {
+			verifyEmail();
+		}
 	}, []);
 
 	return (

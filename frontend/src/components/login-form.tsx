@@ -69,7 +69,7 @@ export function LoginForm() {
 
 	useEffect(() => {
 		setValue("email", "test@example.com");
-		setValue("password", "password");
+		setValue("password", "Hello@123");
 	}, []);
 
 	return (
